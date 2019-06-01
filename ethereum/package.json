@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:zokrates": "docker run --name zokrates -v $(pwd)/zk-related:/home/zokrates/zk-related -ti zokrates/zokrates:0.4.6 /bin/bash",
-    "zokrates": "zokrates:compile && zokrates:setup && zokrates:export-verifier",
+    "zokrates": "npm run zokrates:compile && npm run zokrates:setup && npm run zokrates:export-verifier",
     "zokrates:compile": "docker exec --workdir /home/zokrates/zk-related zokrates ../zokrates compile -i zk-circuit.code",
     "zokrates:setup": "docker exec --workdir /home/zokrates/zk-related zokrates ../zokrates setup --proving-scheme pghr13",
     "zokrates:export-verifier": "docker exec --workdir /home/zokrates/zk-related zokrates ../zokrates export-verifier --proving-scheme pghr13"

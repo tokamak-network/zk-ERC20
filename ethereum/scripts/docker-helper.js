@@ -26,7 +26,7 @@ const zokratesExec = (cmd) => {
       console.log('exit: ' + code);
 
       if (!code) resolve(code);
-      else reject(code);
+      else reject(new Error(`Exit with code ${code}: ${cmd}`));
     });
   });
 };
