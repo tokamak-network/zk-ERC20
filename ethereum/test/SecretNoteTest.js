@@ -8,23 +8,31 @@ const { zokratesExec } = require('../scripts/docker-helper');
 // const exec = require('child_process').execFile;
 // Promise = require('bluebird');
 
+
+
 contract('SecretNote', function(accounts) {
   // const dockerImageName = "zokrates/zokrates";
   // let dockerContainerName;
 
   let instance;
-  let nodeId, enc;
+  let enc;
 
   const initialAmount = '5';
   const transferAmount = '3';
+  const change = '2';
+
+  before(async () => {
+    instance  = await SecretNote.deployed();
+    enc = await encrypt(accounts[0].slice(2), initialAmount);
+  })
+
 
 
   it('createNoteDummy', async function() {
     // const e = await encrypt('2B522cABE9950D1153c26C1b399B293CaA99FcF9', '5');
     // const d = await decrypt(e);
-    instance = await SecretNote.deployed();
-    enc = await encrypt(accounts[0].slice(2), initialAmount);
-    console.log('enc', enc);
+    // console.log('enc', enc);
+    // console.log('decrypt Test', decrypt(enc));
     const tx = await instance.createNote(accounts[0], '0x' + initialAmount, enc);
     // console.dir(tx, {depth: null});
 
@@ -38,6 +46,7 @@ contract('SecretNote', function(accounts) {
     console.log('state', state.toNumber()); // state 1
     console.log('allnote.length', await instance.getNotesLength());
 
+
     const res = getTransferZkParams(
       accounts[0],
       '0x' + initialAmount,
@@ -49,7 +58,14 @@ contract('SecretNote', function(accounts) {
 
     await zokratesExec(res);
   })
+
+  it('transferNote', async function() {
+
+  })
+
 })
+
+
 
 async function encrypt(address, _amount) {
   // 20 12
