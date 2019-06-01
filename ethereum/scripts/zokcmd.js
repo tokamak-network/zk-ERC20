@@ -33,6 +33,8 @@ function printZokratesCommand(params) {
     cmd += `${new BN(p, 16).toString(10)} `
   })
   console.log(cmd);
+
+  return cmd;
 }
 
 function getTransferZkParams(from, fromAmount, to, toAmount) {
@@ -46,7 +48,7 @@ function getTransferZkParams(from, fromAmount, to, toAmount) {
   let leftOver = getNoteParams(from, change);
   // for the leftover change note, first 2 params (spender public key) are the same. delete elements at 2, 3 index
   leftOver.splice(2, 2);
-  printZokratesCommand(params.concat(leftOver));
+  return printZokratesCommand(params.concat(leftOver));
 }
 
 getTransferZkParams(
@@ -55,3 +57,7 @@ getTransferZkParams(
   '0x9e8f633D0C46ED7170EF3B30E291c64a91a49C7E', // receiver
   '0x9' // value to be sent
 );
+
+module.exports = {
+  getTransferZkParams,
+}

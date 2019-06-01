@@ -1,27 +1,50 @@
 const SecretNote = artifacts.require("SecretNote");
+
 const BN = require('bn.js');
 const crypto = require('crypto');
+const { getTransferZkParams } = require('../scripts/zokcmd');
+
+// const exec = require('child_process').execFile;
+// Promise = require('bluebird');
 
 contract('SecretNote', function(accounts) {
-  it.only('createNoteDummy', async function() {
+  // const dockerImageName = "zokrates/zokrates";
+  // let dockerContainerName;
+  
+  let instance;
+  let nodeId, enc;
+
+  const initialAmount = '5';
+  const transferAmount = '3';
+
+
+  it('createNoteDummy', async function() {
     // const e = await encrypt('2B522cABE9950D1153c26C1b399B293CaA99FcF9', '5');
     // const d = await decrypt(e);
-    let instance = await SecretNote.deployed();
-    let enc = await encrypt(accounts[0].slice(2), '5')
-    const tx = await instance.createNote(accounts[0], '0x5', enc);
+    instance = await SecretNote.deployed();
+    enc = await encrypt(accounts[0].slice(2), initialAmount);
+    console.log('enc', enc);
+    const tx = await instance.createNote(accounts[0], '0x' + initialAmount, enc);
     // console.dir(tx, {depth: null});
 
-    const noteId = tx.logs[0].args.noteId;
+    noteId = tx.logs[0].args.noteId;
     const index = tx.logs[0].args.index;
     console.log('noteId', noteId);
+    console.log('index', index);
 
-    // decrypt
-    const cipher = await instance.allNotes.call(index)
-    const noteHash = await decrypt(cipher);
-    console.log('noteHash', noteHash)
-    // check noteHash in mapping now
-    const state = await instance.notes.call('0x' + noteHash)
-    console.log('state', state.toNumber()) // state 1
+    // get note by noteId
+    const state = await instance.notes(noteId);
+    console.log('state', state.toNumber()); // state 1
+    console.log('allnote.length', await instance.getNotesLength());
+
+    const res = getTransferZkParams(
+      accounts[0],
+      '0x' + initialAmount,
+      accounts[1],
+      '0x' + transferAmount,
+    );
+
+    console.log("getTransferZkParams()", res);
   })
 })
 
@@ -47,4 +70,11 @@ async function decrypt(cipher) {
   const buf = Buffer.from(_address + _amount, 'hex');
   const digest = crypto.createHash('sha256').update(buf).digest('hex');
   return digest;
+}
+
+function promiseFromChildProcess(child) {
+    return new Promise(function (resolve, reject) {
+        child.addListener("error", reject);
+        child.addListener("exit", resolve);
+    });
 }
