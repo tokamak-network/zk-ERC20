@@ -600,6 +600,7 @@ contract Verifier {
         return 0;
     }
     event Verified(string s);
+    event Fail(string s);
     function verifyTx(
             uint[2] memory a,
             uint[2] memory a_p,
@@ -628,6 +629,7 @@ contract Verifier {
             emit Verified("Transaction successfully verified.");
             return true;
         } else {
+            emit Fail("verifying failed");
             return false;
         }
     }
