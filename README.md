@@ -10,3 +10,27 @@ Private DAI transactions on ethereum.
 
 Dev setup instructions
 [Video](https://www.youtube.com/watch?v=DCnaUYbk75k&feature=youtu.be)
+
+Requirement
+- docker
+- ganachi-cli
+
+Setup instructions
+```
+//open terminal #1
+$ git clone https://github.com/Onther-Tech/zk-ERC20
+$ cd zk-ERC20
+$ ganachi-cli
+
+//open termianal #2
+//mote to repo directory
+$ npm run start:zokrates
+
+//open terminal #3
+$ npm run zokrates
+
+//for test
+$ truffle test test/SecretNoteTest.js
+
+
+```
