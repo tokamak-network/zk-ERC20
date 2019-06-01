@@ -67,7 +67,30 @@ contract('SecretNote', function(accounts) {
     fixProofJson();
   })
 
-  it('transferNote', async function() {
+  it('transferNoteTest', async function() {
+
+    //TODO : Compute Witness
+    //TODO : Get rid of 0 in proof.input and change to String and add "0x"
+
+    let proofJson = fs.readFileSync('./zk-related/proof.json', 'utf8');
+    proofJson = JSON.parse(proofJson);
+    const proof = proofJson.proof;
+    const input = proofJson.input;
+    const _proof = [];
+    Object.keys(proof).forEach(key => _proof.push(proof[key]));
+    _proof.push(input)
+
+    const encNote1 = await encrypt(accounts[1].slice(2), transferAmount);
+    const encNote2 = await encrypt(accounts[0].slice(2), changeAmount);
+
+    const transferTx = await instance.transferNote(..._proof, encNote1, encNote2);
+    assert(transferTx);
+    console.log("transferNote", transferTx.logs[1].args.sn);
+    // 0xe7808fdb6a4f1b7cff2d8335474d4a3115e48740cd5afd2a297e2fefc8344422
+    // 0x0586a8b95aba11a17b11ece051faaf0acc8d220634afb37e88e567ccfd94b313
+    // state = await instance.notes('0xa62690905633f6816bb23adf0ab399b0af9077e45a7558b32008a77793b906b5');
+    state = await instance.notes(transferTx.logs[1].args.sn);
+    console.log('state', state.toNumber()); // state 1
 
   })
 
