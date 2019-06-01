@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
 import "./ERC20Interface.sol";
-import "./verifier.sol";
+import "../zk-related/verifier.sol";
 
 contract SecretNote is Verifier {
 
@@ -15,7 +15,7 @@ contract SecretNote is Verifier {
   bytes32[] public allHashedNotes;
 
   function createNote(address owner, uint amount, string memory encryptedNote) public {
-    bytes32 note = sha256(abi.encodePacked(msg.sender, amount));
+    bytes32 note = sha256(abi.encodePacked(bytes32(uint(uint160(msg.sender))), amount));
     createNote(note, encryptedNote);
   }
 
@@ -77,23 +77,38 @@ contract SecretNote is Verifier {
     emit NoteCreated(note, allNotes.length - 1);
   }
 
+  /* event CalcNoteHashTest(bytes16 _a, bytes16 _b);
+  event CalcNioteHashTestBytes32(bytes32 _e, bytes32 _f);
+  event CalcNoteHashTestUint(uint _c, uint _d); */
   function calcNoteHash(uint _a, uint _b) internal returns(bytes32 note) {
-    bytes16 a = bytes16(bytes32(_a));
-    bytes16 b = bytes16(bytes32(_b));
+    bytes16 a = bytes16(uint128(_a));
+    bytes16 b = bytes16(uint128(_b));
+    /* bytes16 a = bytes16(_a);
+    bytes16 b = bytes16(_b); */
+    /* emit CalcNioteHashTestBytes32(e, f); */
+    /* emit CalcNoteHashTestUint(_a, _b); */
+    /* emit CalcNoteHashTest(a, b); */
     bytes memory _note = new bytes(32);
 
     for (uint i = 0; i < 16; i++) {
       _note[i] = a[i];
       _note[16 + i] = b[i];
     }
-    note = bytesToBytes32(_note, 0);
+    return bytesToBytes32(_note);
   }
 
-  function bytesToBytes32(bytes memory b, uint offset) internal pure returns (bytes32) {
+  /* function bytesToBytes32(bytes memory b, uint offset) internal pure returns (bytes32) {
     bytes32 out;
     for (uint i = 0; i < 32; i++) {
       out |= bytes32(b[offset + i] & 0xFF) >> (i * 8);
     }
     return out;
+  } */
+
+  function bytesToBytes32(bytes memory trieValue) public pure returns (bytes32 v) {
+    require(trieValue.length == 0x20);
+    assembly {
+       v := mload(add(trieValue, 0x20))
+    }
   }
 }
