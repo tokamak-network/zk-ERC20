@@ -15,15 +15,15 @@ const zokratesExec = (cmd) => {
 
   return new Promise((resolve, reject) => {
     c.stdout.on('data', function(data) {
-      console.log('stdout: ' + data);
+      // console.log('stdout: ' + data);
     });
 
     c.stderr.on('data', function(data) {
-      console.log('stderr: ' + data);
+      // console.log('stderr: ' + data);
     });
 
     c.on('exit', function(code) {
-      console.log('exit: ' + code);
+      // console.log('exit: ' + code);
 
       if (!code) resolve(code);
       else reject(new Error(`Exit with code ${code}: ${cmd}`));
