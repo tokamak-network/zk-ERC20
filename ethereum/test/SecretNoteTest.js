@@ -4,6 +4,7 @@ const BN = require('bn.js');
 const crypto = require('crypto');
 const { getTransferZkParams } = require('../scripts/zokcmd');
 const { zokratesExec } = require('../scripts/docker-helper');
+const { fixProofJson } = require('../scripts/fix-proof');
 
 // const exec = require('child_process').execFile;
 // Promise = require('bluebird');
@@ -56,7 +57,14 @@ contract('SecretNote', function(accounts) {
 
     console.log("getTransferZkParams()", res);
 
+    // make witness
     await zokratesExec(res);
+
+    // make proofj.json
+    await zokratesExec("zokrates generate-proof --proving-scheme pghr13");
+
+    // fix proof.json
+    fixProofJson();
   })
 
   it('transferNote', async function() {

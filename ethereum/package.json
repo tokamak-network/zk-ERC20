@@ -20,6 +20,7 @@
   "dependencies": {
     "bluebird": "^3.5.5",
     "child-process-promise": "^2.2.1",
+    "jsonic": "^0.3.1",
     "node-docker-api": "^1.1.22"
   }
 }
