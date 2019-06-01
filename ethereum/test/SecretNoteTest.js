@@ -3,6 +3,7 @@ const SecretNote = artifacts.require("SecretNote");
 const BN = require('bn.js');
 const crypto = require('crypto');
 const { getTransferZkParams } = require('../scripts/zokcmd');
+const { zokratesExec } = require('../scripts/docker-helper');
 
 // const exec = require('child_process').execFile;
 // Promise = require('bluebird');
@@ -10,7 +11,7 @@ const { getTransferZkParams } = require('../scripts/zokcmd');
 contract('SecretNote', function(accounts) {
   // const dockerImageName = "zokrates/zokrates";
   // let dockerContainerName;
-  
+
   let instance;
   let nodeId, enc;
 
@@ -45,6 +46,8 @@ contract('SecretNote', function(accounts) {
     );
 
     console.log("getTransferZkParams()", res);
+
+    await zokratesExec(res);
   })
 })
 
