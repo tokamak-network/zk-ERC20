@@ -2,14 +2,14 @@ const SecretNote = artifacts.require("SecretNote");
 
 const BN = require('bn.js');
 const crypto = require('crypto');
+const fs = require('fs');
+
 const { getTransferZkParams } = require('../scripts/zokcmd');
 const { zokratesExec } = require('../scripts/docker-helper');
 const { fixProofJson } = require('../scripts/fix-proof');
 
 // const exec = require('child_process').execFile;
 // Promise = require('bluebird');
-
-
 
 contract('SecretNote', function(accounts) {
   // const dockerImageName = "zokrates/zokrates";
@@ -20,7 +20,7 @@ contract('SecretNote', function(accounts) {
 
   const initialAmount = '5';
   const transferAmount = '3';
-  const change = '2';
+  const changeAmount = '2';
 
   before(async () => {
     instance  = await SecretNote.deployed();
@@ -85,16 +85,14 @@ contract('SecretNote', function(accounts) {
 
     const transferTx = await instance.transferNote(..._proof, encNote1, encNote2);
     assert(transferTx);
-    console.log("transferNote", transferTx.logs[1].args.sn);
-    // 0xe7808fdb6a4f1b7cff2d8335474d4a3115e48740cd5afd2a297e2fefc8344422
-    // 0x0586a8b95aba11a17b11ece051faaf0acc8d220634afb37e88e567ccfd94b313
-    // state = await instance.notes('0xa62690905633f6816bb23adf0ab399b0af9077e45a7558b32008a77793b906b5');
-    state = await instance.notes(transferTx.logs[1].args.sn);
-    console.log('state', state.toNumber()); // state 1
 
-  })
+    const state1 = await instance.notes(transferTx.logs[1].args.noteId);
+    console.log('state1', state1.toNumber()); // new note 1 state
 
-})
+    const state2 = await instance.notes(transferTx.logs[2].args.noteId);
+    console.log('state2', state2.toNumber()); // new note 2 state
+  });
+});
 
 
 
