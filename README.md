@@ -1,26 +1,28 @@
 # Zk-ERC20
 
-Requirement
+## Requirement
 - docker
 - ganachi-cli
 
-Setup instructions
+## Setup & Test Instructions
 ```
-//open terminal #1
+//Need at least three terminals
+
+//terminal #1
 $ git clone https://github.com/Onther-Tech/zk-ERC20
 $ cd zk-ERC20
 $ ganachi-cli
 
-//open termianal #2
+//termianal #2
 //in repository directory
 $ npm run start:zokrates
 
-
-//open terminal #3
+//terminal #3
 //in repository directory
-$ npm run zokrates //compile, setup and export verifier.sol
+//zokrates compile, setup and export verifier.sol
+$ npm run zokrates
 
-//for test
+//test
 $ truffle test test/SecretNoteTest.js
 
 
