@@ -16,6 +16,7 @@ contract SecretNote is Verifier {
 
   function createNote(address owner, uint amount, string memory encryptedNote) public {
     bytes32 note = sha256(abi.encodePacked(bytes32(uint(uint160(msg.sender))), amount));
+    /* bytes32 note = makeNoteHash(owner, amount); */
     createNote(note, encryptedNote);
   }
 
@@ -111,4 +112,8 @@ contract SecretNote is Verifier {
        v := mload(add(trieValue, 0x20))
     }
   }
+
+  /* function makeNoteHash(address addrs, uint amount) public pure returns (bytes32){
+    return sha256(abi.encodePacked(bytes32(uint(uint160(addrs))), amount));
+  } */
 }

@@ -8,46 +8,51 @@ const { getTransferZkParams } = require('../scripts/zokcmd');
 const { zokratesExec } = require('../scripts/docker-helper');
 const { fixProofJson } = require('../scripts/fix-proof');
 
-// const exec = require('child_process').execFile;
-// Promise = require('bluebird');
-
 contract('SecretNote', function(accounts) {
-  // const dockerImageName = "zokrates/zokrates";
-  // let dockerContainerName;
 
   let instance;
   let enc;
 
+  //transfer note test #1
   const initialAmount = '5';
   const transferAmount = '3';
   const changeAmount = '2';
+
+  //trnasfer note test #2
+  const transferAmount2 = '1';
+  const changeAmount2 = '1';
 
   before(async () => {
     instance  = await SecretNote.deployed();
     enc = await encrypt(accounts[0].slice(2), initialAmount);
   })
 
-
-
   it('createNoteDummy', async function() {
-    // const e = await encrypt('2B522cABE9950D1153c26C1b399B293CaA99FcF9', '5');
-    // const d = await decrypt(e);
-    // console.log('enc', enc);
-    // console.log('decrypt Test', decrypt(enc));
     const tx = await instance.createNote(accounts[0], '0x' + initialAmount, enc);
-    // console.dir(tx, {depth: null});
 
     noteId = tx.logs[0].args.noteId;
     const index = tx.logs[0].args.index;
-    console.log('noteId', noteId);
-    console.log('index', index);
+    console.log('Dummy(note0) noteId', noteId);
+    console.log('Dummn(note0) index', index);
 
     // get note by noteId
     const state = await instance.notes(noteId);
-    console.log('state', state.toNumber()); // state 1
-    console.log('allnote.length', await instance.getNotesLength());
+    console.log('Dummy(note0) State', state.toNumber()); // state 1:Created
+    console.log('allnote.length', await instance.getNotesLength()); // 1
 
+  })
 
+  it('transferNoteTest1', async function() {
+
+    // let proofJson = fs.readFileSync('./zk-related/proof.json', 'utf8');
+    // proofJson = JSON.parse(proofJson);
+    // const proof = proofJson.proof;
+    // const input = proofJson.input;
+    // const _proof = [];
+    // Object.keys(proof).forEach(key => _proof.push(proof[key]));
+    // _proof.push(input);
+
+    //zokrates : make witness command
     const res = getTransferZkParams(
       accounts[0],
       '0x' + initialAmount,
@@ -55,30 +60,14 @@ contract('SecretNote', function(accounts) {
       '0x' + transferAmount,
     );
 
-    console.log("getTransferZkParams()", res);
-
     // make witness
     await zokratesExec(res);
-
-    // make proofj.json
+    // make proof.json
     await zokratesExec("zokrates generate-proof --proving-scheme pghr13");
-
     // fix proof.json
     fixProofJson();
-  })
 
-  it('transferNoteTest', async function() {
-
-    //TODO : Compute Witness
-    //TODO : Get rid of 0 in proof.input and change to String and add "0x"
-
-    let proofJson = fs.readFileSync('./zk-related/proof.json', 'utf8');
-    proofJson = JSON.parse(proofJson);
-    const proof = proofJson.proof;
-    const input = proofJson.input;
-    const _proof = [];
-    Object.keys(proof).forEach(key => _proof.push(proof[key]));
-    _proof.push(input)
+    const _proof = await getProof();
 
     const encNote1 = await encrypt(accounts[1].slice(2), transferAmount);
     const encNote2 = await encrypt(accounts[0].slice(2), changeAmount);
@@ -120,9 +109,13 @@ async function decrypt(cipher) {
   return digest;
 }
 
-function promiseFromChildProcess(child) {
-    return new Promise(function (resolve, reject) {
-        child.addListener("error", reject);
-        child.addListener("exit", resolve);
-    });
+async function getProof( ) {
+  let proofJson = await fs.readFileSync('./zk-related/proof.json', 'utf8');
+  proofJson = JSON.parse(proofJson);
+  const proof = proofJson.proof;
+  const input = proofJson.input;
+  const _proof = [];
+  Object.keys(proof).forEach(key => _proof.push(proof[key]));
+  _proof.push(input);
+  return _proof;
 }

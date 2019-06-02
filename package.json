@@ -1,34 +1,26 @@
 {
-  "name": "zeth",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "bn.js": "^4.11.8",
-    "ethereumjs-tx": "^1.3.7",
-    "ethereumjs-util": "^6.0.0",
-    "express": "^4.16.4",
-    "mdbreact": "^4.8.4",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
-    "react-router": "^4.3.1",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.1",
-    "truffle-hdwallet-provider": "0.0.6",
-    "web3": "^1.0.0-beta.36"
+  "name": "ethereum",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:zokrates": "docker run --name zokrates -v $(pwd)/zk-related:/home/zokrates/zk-related -ti zokrates/zokrates:0.4.6 /bin/bash",
+    "zokrates": "npm run zokrates:compile && npm run zokrates:setup && npm run zokrates:export-verifier",
+    "zokrates:compile": "docker exec --workdir /home/zokrates/zk-related zokrates ../zokrates compile -i zk-circuit.code",
+    "zokrates:setup": "docker exec --workdir /home/zokrates/zk-related zokrates ../zokrates setup --proving-scheme pghr13",
+    "zokrates:export-verifier": "docker exec --workdir /home/zokrates/zk-related zokrates ../zokrates export-verifier --proving-scheme pghr13"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.5",
+    "child-process-promise": "^2.2.1",
+    "jsonic": "^0.3.1",
+    "node-docker-api": "^1.1.22"
+  }
 }
