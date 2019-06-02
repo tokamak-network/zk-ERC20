@@ -10,7 +10,7 @@
 
 //terminal #1
 $ git clone https://github.com/Onther-Tech/zk-ERC20
-$ cd zk-ERC20
+$ cd zk-ERC20 & npm install
 $ ganachi-cli
 
 //termianal #2
@@ -24,6 +24,4 @@ $ npm run zokrates
 
 //test
 $ truffle test test/SecretNoteTest.js
-
-
 ```
