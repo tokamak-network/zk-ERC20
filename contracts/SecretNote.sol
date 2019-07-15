@@ -5,7 +5,7 @@ import "../zk-related/verifier.sol";
 
 contract SecretNote is Verifier {
 
-  ERC20 internal DAI_TOKEN_ADDRESS = ERC20(0x44b7e57c40dCE96b7Cdd63c3844Cc80AA80e2201);
+  ERC20 internal DAI_TOKEN_ADDRESS = ERC20(0xe7E7693E7e165af9B97a124aeb655d6930cbF711);
 
   constructor() public {}
 
