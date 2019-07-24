@@ -79,14 +79,14 @@ contract SecretNote is Verifier {
   }
 
   /* event CalcNoteHashTest(bytes16 _a, bytes16 _b);
-  event CalcNioteHashTestBytes32(bytes32 _e, bytes32 _f);
+  event CalcNoteHashTestBytes32(bytes32 _e, bytes32 _f);
   event CalcNoteHashTestUint(uint _c, uint _d); */
   function calcNoteHash(uint _a, uint _b) internal returns(bytes32 note) {
     bytes16 a = bytes16(uint128(_a));
     bytes16 b = bytes16(uint128(_b));
     /* bytes16 a = bytes16(_a);
     bytes16 b = bytes16(_b); */
-    /* emit CalcNioteHashTestBytes32(e, f); */
+    /* emit CalcNoteHashTestBytes32(e, f); */
     /* emit CalcNoteHashTestUint(_a, _b); */
     /* emit CalcNoteHashTest(a, b); */
     bytes memory _note = new bytes(32);
