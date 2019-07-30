@@ -2,7 +2,7 @@
 
 ## Requirement
 - docker
-- ganachi-cli
+- ganache-cli
 
 ## Setup & Test Instructions
 ```
@@ -11,7 +11,7 @@
 //terminal #1
 $ git clone https://github.com/Onther-Tech/zk-ERC20
 $ cd zk-ERC20 & npm install
-$ ganachi-cli
+$ ganache-cli
 
 //termianal #2
 //in repository directory
